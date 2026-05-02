@@ -1,0 +1,28 @@
+# Environment
+.env
+*.env
+
+# SQLite database
+*.db
+*.db-journal
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+
+# Bundled Lambda deps (not needed for standalone)
+AWS Lambda/annotated_types/
+AWS Lambda/anyio/
+AWS Lambda/fastapi/
+AWS Lambda/idna/
+AWS Lambda/mangum/
+AWS Lambda/pydantic/
+AWS Lambda/pydantic_core/
+AWS Lambda/sniffio/
+AWS Lambda/starlette/
+AWS Lambda/__pycache__/

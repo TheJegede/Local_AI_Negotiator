@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Supply Chain Negotiator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="intro-overlay" style="
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+">
+    <div style="
+        background: white;
+        width: 90%;
+        max-width: 600px;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        font-family: 'Segoe UI', sans-serif;
+    ">
+        <h1 style="color: #2563eb; margin-top: 0; font-size: 28px;">Supply Chain Negotiation Sim</h1>
+        
+        <div style="margin: 20px 0; color: #374151; line-height: 1.6;">
+            <p><strong>👨‍💼 Your Role:</strong> Procurement Manager at TechFlow Systems.</p>
+            <p><strong>🤖 Counterpart:</strong> Alex, Sales Rep at ChipSource Inc.</p>
+            
+            <div style="background: #eff6ff; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0; border-radius: 4px;">
+                <h3 style="margin: 0 0 10px 0; color: #1e40af;">🎯 Your Objectives</h3>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>Negotiate the <strong>Unit Price</strong> (Target: Low)</li>
+                    <li>Negotiate the <strong>Delivery Time</strong> (Target: Fast)</li>
+                    <li>Confirm the <strong>Volume</strong> (Standard: 10,000 units)</li>
+                </ul>
+            </div>
+
+            <p><strong>📝 Instructions:</strong></p>
+            <ol style="margin-top: 5px;">
+                <li>Type your offers naturally (e.g., <em>"I need a better price than $50"</em>).</li>
+                <li>Alex will counter-offer based on his constraints.</li>
+                <li>When you reach an agreement, say <strong>"I accept"</strong> or <strong>"Deal confirmed"</strong> to finish.</li>
+            </ol>
+        </div>
+
+        <button id="start-btn" style="
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        " onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
+            Understood, Begin Negotiation 🚀
+        </button>
+    </div>
+</div>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-handshake"></i> Negotiator</h2>
+                <button id="new-chat-btn" class="btn-primary-outline">
+                    <i class="fa-solid fa-rotate-right"></i> New Chat
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Deal Configuration</h3>
+                <div class="form-group">
+                    <label>Parameters Source:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="seedParams" value="random" checked> Random</label>
+                        <label><input type="radio" name="seedParams" value="student"> Student ID</label>
+                    </div>
+                </div>
+                <div class="form-group" id="student-id-group" style="display:none;">
+                    <input type="text" id="student-id-input" placeholder="Enter Student ID">
+                </div>
+            </div>
+
+            <div class="sidebar-section flex-grow">
+                <h3>Recent Chats</h3>
+                <div id="chat-list" class="chat-list">
+                    </div>
+            </div>
+
+            <!-- Dynamic Deal Status (Hidden until needed) -->
+            <div id="deal-status" class="sidebar-section hidden">
+                <h3>Current Agreement</h3>
+                <div class="deal-metrics">
+                    <div class="metric">
+                        <span class="label">Price</span>
+                        <span class="value" id="metric-price">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Delivery</span>
+                        <span class="value" id="metric-delivery">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Volume</span>
+                        <span class="value" id="metric-volume">--</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <div class="chat-header">
+                <div class="agent-info">
+                    <div class="avatar">A</div>
+                    <div>
+                        <h3>Alex</h3>
+                        <span>Supply Chain Manager, ChipSource Inc.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-history" class="chat-history">
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea id="user-input" placeholder="Type your proposal here..." rows="1"></textarea>
+                    <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+                <div class="input-footer">
+                    <small>AI can make mistakes. Verify important information.</small>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
