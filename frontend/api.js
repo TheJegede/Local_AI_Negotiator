@@ -20,7 +20,7 @@ class NegotiationAPI {
       return process.env.REACT_APP_API_URL;
     }
 
-    // Check for Amplify environment variable
+    // Check for environment variable override
     if (typeof window !== 'undefined' && window.REACT_APP_API_URL) {
       return window.REACT_APP_API_URL;
     }
@@ -32,21 +32,22 @@ class NegotiationAPI {
     }
 
     // Production URL loaded from config.js (window.APP_CONFIG.API_URL)
-    const PRODUCTION_API_URL = (window.APP_CONFIG && window.APP_CONFIG.API_URL)
-      || 'https://gcvvcqzs3j.execute-api.us-east-2.amazonaws.com/prod';
+    const PRODUCTION_API_URL = window.APP_CONFIG && window.APP_CONFIG.API_URL;
 
-    // If in production (https), use API Gateway
+    // If in production (https), require config.js to have API_URL set
     if (window.location.protocol === 'https:') {
-      return PRODUCTION_API_URL;
+      if (!PRODUCTION_API_URL) {
+        console.error('Production deployment requires API_URL to be set in config.js');
+      }
+      return PRODUCTION_API_URL || '';
     }
 
-    // For localhost development, try common ports
+    // For localhost development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       return 'http://localhost:8000';
     }
 
-    // Fallback to production API Gateway
-    return PRODUCTION_API_URL;
+    return PRODUCTION_API_URL || '';
   }
 
   /**

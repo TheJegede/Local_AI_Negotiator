@@ -20,50 +20,52 @@
     backdrop-filter: blur(5px);
 ">
     <div style="
-        background: white;
+        background: #2f2f2f;
         width: 90%;
-        max-width: 600px;
-        padding: 40px;
+        max-width: 560px;
+        padding: 36px 40px;
         border-radius: 16px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid #3f3f3f;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.6);
         font-family: 'Segoe UI', sans-serif;
+        color: #ececec;
     ">
-        <h1 style="color: #2563eb; margin-top: 0; font-size: 28px;">Supply Chain Negotiation Sim</h1>
-        
-        <div style="margin: 20px 0; color: #374151; line-height: 1.6;">
-            <p><strong>👨‍💼 Your Role:</strong> Procurement Manager at TechFlow Systems.</p>
-            <p><strong>🤖 Counterpart:</strong> Alex, Sales Rep at ChipSource Inc.</p>
-            
-            <div style="background: #eff6ff; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0; border-radius: 4px;">
-                <h3 style="margin: 0 0 10px 0; color: #1e40af;">🎯 Your Objectives</h3>
-                <ul style="margin: 0; padding-left: 20px;">
-                    <li>Negotiate the <strong>Unit Price</strong> (Target: Low)</li>
-                    <li>Negotiate the <strong>Delivery Time</strong> (Target: Fast)</li>
-                    <li>Confirm the <strong>Volume</strong> (Standard: 10,000 units)</li>
+        <h1 style="color: #ececec; margin-top: 0; font-size: 24px; font-weight: 600;">Supply Chain Negotiation Sim</h1>
+
+        <div style="margin: 20px 0; color: #c0c0c0; line-height: 1.65; font-size: 15px;">
+            <p><strong style="color:#ececec;">👨‍💼 Your Role:</strong> Procurement Manager at TechFlow Systems.</p>
+            <p style="margin-top:8px;"><strong style="color:#ececec;">🤖 Counterpart:</strong> Alex, Sales Rep at ChipSource Inc.</p>
+
+            <div style="background: #1e2d45; padding: 14px 16px; border-left: 3px solid #2563eb; margin: 16px 0; border-radius: 4px;">
+                <h3 style="margin: 0 0 8px 0; color: #93c5fd; font-size: 14px;">🎯 Your Objectives</h3>
+                <ul style="margin: 0; padding-left: 18px; color: #c0c0c0;">
+                    <li>Negotiate the <strong style="color:#ececec;">Unit Price</strong> (Target: Low)</li>
+                    <li>Negotiate the <strong style="color:#ececec;">Delivery Time</strong> (Target: Fast)</li>
+                    <li>Confirm the <strong style="color:#ececec;">Volume</strong> (Standard: 10,000 units)</li>
                 </ul>
             </div>
 
-            <p><strong>📝 Instructions:</strong></p>
-            <ol style="margin-top: 5px;">
+            <p><strong style="color:#ececec;">📝 Instructions:</strong></p>
+            <ol style="margin-top: 6px; padding-left: 18px;">
                 <li>Type your offers naturally (e.g., <em>"I need a better price than $50"</em>).</li>
                 <li>Alex will counter-offer based on his constraints.</li>
-                <li>When you reach an agreement, say <strong>"I accept"</strong> or <strong>"Deal confirmed"</strong> to finish.</li>
+                <li>When you reach an agreement, say <strong style="color:#ececec;">"I accept"</strong> or <strong style="color:#ececec;">"Deal confirmed"</strong> to finish.</li>
             </ol>
         </div>
 
         <button id="start-btn" style="
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: #2563eb;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
         " onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
-            Understood, Begin Negotiation 🚀
+            Understood, Begin Negotiation →
         </button>
     </div>
 </div>

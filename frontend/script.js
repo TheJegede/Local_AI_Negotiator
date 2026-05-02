@@ -9,6 +9,7 @@ let dealParams = null;
 let conversationHistory = [];
 let sessionId = null;
 let negotiationState = 'SETUP'; // SETUP, NEGOTIATING, CLOSING, EVALUATION
+let firstMessageSent = false;
 
 /**
  * Escape HTML to prevent XSS when inserting into innerHTML contexts
@@ -112,8 +113,9 @@ async function startNewNegotiation() {
     
     // Update State
     sessionId = session.session_id;
-    // NEW: Save to History
-    saveToHistoryList(sessionId, `Negotiation ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`);
+    firstMessageSent = false;
+    const historyTitle = (seedMode === 'student' && studentId) ? `Student ${studentId}` : 'New Negotiation';
+    saveToHistoryList(sessionId, historyTitle);
     renderChatHistory();
     api.sessionId = sessionId; 
     dealParams = session.deal_params;
@@ -191,6 +193,11 @@ async function sendMessage() {
     // Get AI response
     const result = await api.sendMessage(userMessage);
     displayMessage('assistant', result.ai_response);
+
+    if (!firstMessageSent) {
+      firstMessageSent = true;
+      updateSessionTitle(sessionId, userMessage);
+    }
 
     // 1. Update Metrics if terms were proposed
     if (result.proposed_terms) {
@@ -308,19 +315,21 @@ function handleAgreementDetected(agreedTerms) {
   const box = document.createElement('div');
   box.className = 'confirmation-box';
   box.style.cssText = `
-    background: white;
-    border-radius: 12px;
+    background: #2f2f2f;
+    border: 1px solid #3f3f3f;
+    border-radius: 14px;
     padding: 2rem;
     max-width: 400px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    color: #ececec;
   `;
 
   box.innerHTML = `
-    <h3 style="color: #333; margin-bottom: 1rem;">✅ Deal Confirmed!</h3>
-    <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.95rem;">
-      <p style="margin-bottom: 0.5rem;"><strong>Price:</strong> $${agreedTerms.price} per unit</p>
-      <p style="margin-bottom: 0.5rem;"><strong>Delivery:</strong> ${agreedTerms.delivery} days</p>
-      <p><strong>Volume:</strong> ${agreedTerms.volume?.toLocaleString() || 'Standard'} units</p>
+    <h3 style="color: #ececec; margin-bottom: 1rem;">✅ Deal Confirmed!</h3>
+    <div style="background: #1a3a1a; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.95rem; border: 1px solid #2d5a2d;">
+      <p style="margin-bottom: 0.5rem; color:#c0c0c0;"><strong style="color:#ececec;">Price:</strong> $${agreedTerms.price} per unit</p>
+      <p style="margin-bottom: 0.5rem; color:#c0c0c0;"><strong style="color:#ececec;">Delivery:</strong> ${agreedTerms.delivery} days</p>
+      <p style="color:#c0c0c0;"><strong style="color:#ececec;">Volume:</strong> ${agreedTerms.volume?.toLocaleString() || 'Standard'} units</p>
     </div>
     <div style="display: flex; gap: 1rem;">
       <button id="confirm-deal-btn" style="
@@ -329,17 +338,17 @@ function handleAgreementDetected(agreedTerms) {
         color: white;
         border: none;
         padding: 0.75rem;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
         font-weight: 500;
       ">Finalize & Grade</button>
       <button id="continue-negotiating-btn" style="
         flex: 1;
-        background: #e5e7eb;
-        color: #374151;
-        border: none;
+        background: #3a3a3a;
+        color: #ececec;
+        border: 1px solid #555;
         padding: 0.75rem;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
         font-weight: 500;
       ">Continue Negotiating</button>
@@ -416,21 +425,23 @@ function displayEvaluation(reportText) {
 
   const box = document.createElement('div');
   box.style.cssText = `
-    background: white;
-    border-radius: 12px;
+    background: #2f2f2f;
+    border: 1px solid #3f3f3f;
+    border-radius: 14px;
     padding: 2rem;
     max-width: 600px;
     width: 90%;
     margin: 2rem auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     max-height: 80vh;
     overflow-y: auto;
+    color: #ececec;
   `;
 
   box.innerHTML = `
-    <h2 style="color: #333; margin-bottom: 1.5rem; text-align: center;">📊 Negotiation Report</h2>
+    <h2 style="color: #ececec; margin-bottom: 1.5rem; text-align: center;">📊 Negotiation Report</h2>
 
-    <div style="background: #f9fafb; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; font-size: 1rem; line-height: 1.6; white-space: pre-wrap; font-family: sans-serif;">
+    <div style="background: #212121; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.95rem; line-height: 1.7; white-space: pre-wrap; font-family: sans-serif; color: #c0c0c0; border: 1px solid #3f3f3f;">
 ${escapeHtml(reportText)}
     </div>
 
@@ -439,8 +450,8 @@ ${escapeHtml(reportText)}
       background: #2563eb;
       color: white;
       border: none;
-      padding: 1rem;
-      border-radius: 6px;
+      padding: 0.9rem;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       font-size: 1rem;
@@ -465,17 +476,35 @@ const HISTORY_KEY = 'negotiator_sessions';
 
 function saveToHistoryList(id, title) {
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-    // Add new chat to top
     history.unshift({ id, title, date: new Date().toISOString() });
-    // Keep last 15 chats
     if (history.length > 15) history.pop();
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function updateSessionTitle(id, text) {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    const item = history.find(h => h.id === id);
+    if (!item) return;
+    const trimmed = text.trim();
+    item.title = trimmed.length > 42 ? trimmed.substring(0, 42) + '…' : trimmed;
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    renderChatHistory();
+}
+
+function getDateGroup(isoString) {
+    const now = new Date();
+    const date = new Date(isoString);
+    const diffDays = Math.floor((now - date) / 86400000);
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays <= 7) return 'Previous 7 Days';
+    return 'Older';
 }
 
 function renderChatHistory() {
     const listContainer = document.getElementById('chat-list');
     if (!listContainer) return;
-    
+
     const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
     listContainer.innerHTML = '';
 
@@ -484,15 +513,32 @@ function renderChatHistory() {
         return;
     }
 
+    const groupOrder = ['Today', 'Yesterday', 'Previous 7 Days', 'Older'];
+    const groups = {};
     history.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `chat-item ${item.id === sessionId ? 'active' : ''}`;
-        div.innerHTML = `
-            <i class="fa-regular fa-comments"></i>
-            <span style="overflow:hidden; text-overflow:ellipsis;">${item.title}</span>
-        `;
-        div.onclick = () => loadPreviousSession(item.id);
-        listContainer.appendChild(div);
+        const group = getDateGroup(item.date);
+        if (!groups[group]) groups[group] = [];
+        groups[group].push(item);
+    });
+
+    groupOrder.forEach(groupName => {
+        if (!groups[groupName]) return;
+
+        const label = document.createElement('div');
+        label.className = 'chat-group-label';
+        label.textContent = groupName;
+        listContainer.appendChild(label);
+
+        groups[groupName].forEach(item => {
+            const div = document.createElement('div');
+            div.className = `chat-item ${item.id === sessionId ? 'active' : ''}`;
+            div.innerHTML = `
+                <i class="fa-regular fa-comments"></i>
+                <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(item.title)}</span>
+            `;
+            div.onclick = () => loadPreviousSession(item.id);
+            listContainer.appendChild(div);
+        });
     });
 }
 
